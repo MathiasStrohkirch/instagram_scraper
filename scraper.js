@@ -2,13 +2,16 @@ const puppeteer = require('puppeteer');
 const fs = require('fs');
 const request = require('request');
 
+let myArgs = process.argv.slice(2);
+let data = myArgs[0];
+
 (async () => {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
   fs.mkdir('images', { recursive: true }, (err) => {
     if (err) throw err;
   });
-  let array = await csvToArray('sample.csv');
+  let array = await csvToArray(data);
 
   let startDate = new Date();
   let startTime = startDate.getTime();
