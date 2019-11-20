@@ -12,6 +12,8 @@ Have a csv file in the following format
 
 The script will save the profile image of the user as `<index>_<file>_profile` and all post images as `<index>_<file>_1`, `<index>_<file>_2`,`<index>_<file>_3`, ...
 
+This script will ignore any posts not found and videos (but will still download the profile images and any post images of posts with videos)
+
 **Requirements**
 
 - git
