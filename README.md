@@ -19,7 +19,7 @@ This script will ignore any posts not found and videos (but will still download 
 - git
 - node.js
 
-**In the terminal:**
+**In the terminal (after installing git and node.js):**
 
 Clone repository:
 `git clone https://github.com/MathiasStrohkirch/instagram_scraper`
