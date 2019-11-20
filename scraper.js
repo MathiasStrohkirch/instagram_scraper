@@ -71,7 +71,7 @@ let data = myArgs[0];
       }
     }
     try {
-      await page.goto(array[j][1]);
+      await page.goto(array[j][2]);
       var profileImage = await getProfileImage(page);
       var postImages = await getFirstTwoPostImages(page);
 
@@ -86,10 +86,10 @@ let data = myArgs[0];
         click = await clickButton(page);
       }
 
-      download(profileImage, 'images/' + array[j][0] + '_profile');
+      download(profileImage, 'images/' + array[j][0] + '_' + array[j][1] + '_profile');
       for(let i = 0; i < postImages.length; i++) {
         if(postImages[i] !== 'video') {
-          download(postImages[i], 'images/' + array[j][0] + '_' + i);
+          download(postImages[i], 'images/' + array[j][0] + '_' + array[j][1] + '_' + (i + 1));
         }
       }
     }
@@ -192,7 +192,7 @@ async function getNextPostImage(page) {
 function download(uri, filename) {
   request.head(uri, function(err, res, body) {
     request(uri)
-    .pipe(fs.createWriteStream(filename))
+    .pipe(fs.createWriteStream(filename + '.png'))
  });
 }
 
@@ -207,8 +207,8 @@ async function csvToArray(file) {
 
   for(const line of lines) {
     let lineArray = line.split(',');
-    lineArray.shift();
-    lineArray[1] = lineArray[1].substring(1, lineArray[1].length - 2);
+    lineArray[0] = lineArray[0].substring(1, lineArray[0].length - 1);
+    lineArray[2] = lineArray[2].substring(1, lineArray[2].length - 2);
     array.push(lineArray);
   }
   return array;
