@@ -1,0 +1,24 @@
+{
+  "name": "instagram_scraper",
+  "version": "1.0.0",
+  "description": "## To run",
+  "main": "scraper.js",
+  "dependencies": {
+    "puppeteer": "^2.0.0",
+    "request": "^2.88.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MathiasStrohkirch/instagram_scraper.git"
+  },
+  "author": "Mathias Strohkirch",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MathiasStrohkirch/instagram_scraper/issues"
+  },
+  "homepage": "https://github.com/MathiasStrohkirch/instagram_scraper#readme"
+}
