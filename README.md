@@ -31,5 +31,5 @@ Install dependencies:
 Run script:
 `node scraper.js <path_to_csv_file>`
 
-  Example command to run script:
+- Example command to run script:
 `node scraper.js data.csv`
