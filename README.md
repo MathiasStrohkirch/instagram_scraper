@@ -22,6 +22,9 @@ The script will save the profile image of the user as `<index>_<file>_profile` a
 Clone repository:
 `git clone https://github.com/MathiasStrohkirch/instagram_scraper`
 
+Change directory to repository:
+`cd instagram_scraper`
+
 Install dependencies:
 `npm install`
 
