@@ -8,15 +8,22 @@ let data = myArgs[0];
 (async () => {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
-  fs.mkdir('images', { recursive: true }, (err) => {
-    if (err) throw err;
-  });
+  // fs.mkdir('images', { recursive: true }, (err) => {
+  //   if (err) throw err;
+  // });
   let array = await csvToArray(data);
+  let outputArray = await csvToOutputArray(data);
 
   let startDate = new Date();
   let startTime = startDate.getTime();
 
+  outputArray[0].push('images');
+  outputArray[0].push('videos');
+
   for(let j = 0; j < array.length; j++) {
+    outputArray[j + 1].push(0);
+    outputArray[j + 1].push(0);
+
     let numSpaces = (array.length + '').length - ((j + 1) + '').length;
     let spaces = '';
     for(let i = 0; i < numSpaces; i++) {
@@ -71,7 +78,7 @@ let data = myArgs[0];
       }
     }
     try {
-      await page.goto(array[j][2]);
+      await page.goto(array[j][5]);
       var profileImage = await getProfileImage(page);
       var postImages = await getFirstTwoPostImages(page);
 
@@ -86,17 +93,37 @@ let data = myArgs[0];
         click = await clickButton(page);
       }
 
-      download(profileImage, 'images/' + array[j][0] + '_' + array[j][1] + '_profile');
+      let downloadProfilePicture = false;
+
+      let suffix = 1;
+
       for(let i = 0; i < postImages.length; i++) {
         if(postImages[i] !== 'video') {
-          download(postImages[i], 'images/' + array[j][0] + '_' + array[j][1] + '_' + (i + 1));
+          outputArray[j + 1][6]++;
+          if(array[j][4] === 'image') {
+            download(postImages[i], '../../Box Sync/images/' + array[j][1]);
+          }
+          else {
+            download(postImages[i], '../../Box Sync/images/' + array[j][1] + '_' + suffix);
+            suffix++;
+          }
+          downloadProfilePicture = true;
         }
+        else {
+          outputArray[j + 1][7]++;
+        }
+      }
+
+      if(downloadProfilePicture) {
+        download(profileImage, '../../Box Sync/images/' + array[j][1] + '_profile');
       }
     }
     catch(error) {
 
     }
   }
+
+  outputArrayToCsv(outputArray, '../../Box Sync/images/output_csv.csv')
 
   await browser.close();
 })();
@@ -207,9 +234,48 @@ async function csvToArray(file) {
 
   for(const line of lines) {
     let lineArray = line.split(',');
-    lineArray[0] = lineArray[0].substring(1, lineArray[0].length - 1);
-    lineArray[2] = lineArray[2].substring(1, lineArray[2].length - 2);
+    // lineArray[0] = lineArray[0].substring(1, lineArray[0].length - 1);
+    lineArray[5] = lineArray[5].substring(0, lineArray[5].length - 1);
     array.push(lineArray);
   }
   return array;
+}
+
+async function csvToOutputArray(file) {
+  let data = await fs.readFileSync(file, 'utf8');
+
+  let lines = data.split('\n');
+  lines.pop();
+
+  let array = [];
+
+  for(const line of lines) {
+    let lineArray = line.split(',');
+    lineArray[5] = lineArray[5].substring(0, lineArray[5].length - 1);
+    array.push(lineArray);
+  }
+  return array;
+}
+
+async function outputArrayToCsv(array, file) {
+  console.log(array);
+  let data = '';
+  for(let i = 0; i < array.length; i++) {
+    for(let j = 0; j < array[i].length; j++) {
+      data += array[i][j];
+      if(j < array[i].length - 1) {
+        data += ','
+      }
+    }
+    if(i < array.length - 1) {
+      data += '\n'
+    }
+  }
+  await fs.writeFile(file, data, 'utf8', function (err) {
+    if (err) {
+      console.log('Some error occured - file either not saved or corrupted file saved.');
+    } else{
+      console.log('It\'s saved!');
+    }
+  });
 }
